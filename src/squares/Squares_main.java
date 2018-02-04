@@ -1,9 +1,12 @@
 package squares;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 
 
@@ -21,17 +24,25 @@ public class Squares_main {
 		
 		Squares_lib slib = new Squares_lib(x,y);
 		double value[] = new double[100];
+		double value2[][] = new double[100][4];
 		for(int i = 0;i < 100;i++) {
 			theta = slib.getDx();
 			System.out.println(i+" : theta[0] = "+theta[0]);
 			System.out.println(i+" : theta[1] = "+theta[1]);
 			System.out.println(i+" : Objective function = "+slib.getObject());
 			value[i] = slib.getObject();
+			value2[i][0] = i;
+			value2[i][1] = slib.getObject();;
+			value2[i][2] = theta[0];
+			value2[i][3] = theta[1];
+			
 		}
 		
 		Graph graph = new Graph(value);
 		graph.setBounds(5,5,700,550);
 		graph.setVisible(true);
+		
+		smain.writeCSV("csv/result.csv", value2);
 		
 	}//mainŠÖ”I—¹
 
@@ -61,7 +72,36 @@ public double[] getCSV1(String path, int n) { //CSV‚©‚ç1ŽŸŒ³ƒf[ƒ^Žæ‚èž‚Ý(n:ƒf
     System.out.println("CSVŽæ‚èž‚Ý = "+Arrays.toString(csvdata));
     return csvdata;
     //CSV‚©‚çŽæ‚èž‚Ý‚±‚±‚Ü‚Å
-} 
+}
+
+    public void writeCSV(String path,double[][] data) {
+    	try {
+			FileWriter fw = new FileWriter(path, true); //true:’Ç‹LAfalse:ã‘‚«
+			PrintWriter pw = new PrintWriter(new BufferedWriter(fw));
+			//“à—e‚ðŽw’è‚·‚é
+			pw.print("id,objective, theta0, theta1");
+			pw.println();
+			
+			for(int i = 0; i < data.length; i++) {
+				for(int j = 0; j < data[0].length; j++) {
+			    pw.print(data[i][j]);
+			    pw.print(",");
+				}
+				pw.println();
+			}
+			pw.println();
+			//ƒtƒ@ƒCƒ‹‚É‘‚«o‚·
+			pw.close();
+
+			//I—¹ƒƒbƒZ[ƒW‚ð‰æ–Ê‚Éo—Í‚·‚é
+			System.out.println("o—ÍŠ®—¹ : "+path);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+    }
 
 
 }
